@@ -1,0 +1,244 @@
+\<!DOCTYPE html>
+
+\<html lang="en">
+\<head>
+&#x20;   \<meta charset="UTF-8">
+&#x20;   \<meta name="viewport" content="width=device-width, initial-scale=1.0">
+&#x20;   \<title>JUPEB Result Checker\</title>
+
+```
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f3f6fa;
+        color: #222;
+    }
+
+    header {
+        background: #073b2a;
+        color: white;
+        padding: 22px 8%;
+    }
+
+    header h1 {
+        margin: 0;
+        font-size: 25px;
+    }
+
+    header p {
+        margin-bottom: 0;
+        color: #d9eee5;
+    }
+
+    .hero {
+        text-align: center;
+        padding: 65px 20px 35px;
+    }
+
+    .hero h2 {
+        font-size: 34px;
+        color: #073b2a;
+    }
+
+    .hero p {
+        color: #555;
+        line-height: 1.7;
+    }
+
+    .card {
+        background: white;
+        max-width: 470px;
+        margin: 10px auto 60px;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 5px 25px #00000010;
+    }
+
+    .card h3 {
+        margin-top: 0;
+        color: #073b2a;
+    }
+
+    label {
+        display: block;
+        margin: 18px 0 8px;
+        font-weight: bold;
+    }
+
+    input {
+        width: 100%;
+        padding: 13px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 16px;
+    }
+
+    button {
+        width: 100%;
+        margin-top: 22px;
+        padding: 14px;
+        background: #087443;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+
+    button:hover {
+        background: #065b35;
+    }
+
+    .notice {
+        font-size: 10px;
+        color: #777;
+        line-height: 1.6;
+        margin-top: 18px;
+        padding:6px
+        text-align; center;
+    }
+
+    footer {
+        text-align: center;
+        padding: 22px;
+        background: #073b2a;
+        color: white;
+        font-size: 13px;
+    }
+
+    @media (max-width: 500px) {
+        .hero h2 {
+            font-size: 27px;
+        }
+
+        .card {
+            margin: 10px 15px 40px;
+            padding: 22px;
+        }
+    }
+</style>
+```
+
+\</head>
+
+\<body>
+
+```
+<header>
+    <img src="download.jpg" alt="jupeb logo" width="100">
+    
+    <h1>JUPEB RESULT PORTAL</h1>
+    <p>Joint Universities Preliminary Examinations Board</p>
+</header>
+
+<section class="hero">
+    <h2>Check Your Examination Result</h2>
+    <p>
+        Welcome to the result-checking portal.<br>
+        Enter your examination details to get started.
+    </p>
+</section>
+
+<main class="card">
+    <h3>Student Result Checker</h3>
+
+    <form id="resultForm">
+        <label for="examNumber">Examination Number</label>
+        <input
+            type="text"
+            id="examNumber"
+            placeholder="Enter your examination number"
+            required
+        >
+
+        <label for="resultPin">Result PIN</label>
+        <input
+            type="password"
+            id="resultPin"
+            placeholder="Enter your result PIN"
+            required
+        >
+
+        <button type="submit">Check Result</button>
+    </form>
+
+    <p class="notice">
+        Please ensure your examination details are correct.
+        .
+    </p>
+</main>
+
+<footer>
+    &copy; 2026 Result Portal 
+</footer>
+<script>
+  // DEMO ONLY: sample records. Do not put real student PINs here.
+  const sampleResults = {
+    "230010544": {
+      pin: "MOORE1",
+      examNumber: "230010544",
+      surname: "MOORE",
+      otherNames: "EMMANUEL BOLUWATIFE",
+      institution: "UNIVERSITY OF LAGOS",
+      subjects: [
+        { name: "LITERATURE", code: "LIT", grade: "B" },
+        { name: "GOVERNMENT", code: "GOV", grade: "C" },
+        { name: "CHRISTIAN STUDIES", code: "CRS", grade: "B" }
+      ]
+    },
+    "JUPEB230010544026001": {
+      pin: "123456",
+      examNumber: "JUPEB2026001",
+      surname: "SAMPLE",
+      otherNames: "STUDENT",
+      institution: "SAMPLE INSTITUTION",
+      subjects: [
+        { name: "LITERATURE", code: "LIT", grade: "B" },
+        { name: "GOVERNMENT", code: "GOV", grade: "C" },
+        { name: "CHRISTIAN STUDIES", code: "CRS", grade: "B" }
+      ]
+    }
+  };
+
+  document.getElementById("resultForm").addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    const examNumber = document.getElementById("examNumber").value.trim();
+    const pin = document.getElementById("resultPin").value.trim();
+
+    try {
+        const response = await fetch("/api/check-result", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                examNumber: examNumber,
+                pin: pin
+            })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok || !data.success) {
+            alert(data.message || "Incorrect examination number or PIN.");
+            return;
+        }
+
+        sessionStorage.setItem("student", JSON.stringify(data.student));
+
+        window.location.href = "jupeb-result-page.html";
+
+    } catch (error) {
+        console.error("Result checker error:", error);
+        alert("Unable to connect to the server. Please try again.");
+    }
+});
+</script>
+\</body>
+\</html>

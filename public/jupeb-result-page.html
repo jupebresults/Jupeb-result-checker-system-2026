@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JUPEB Result</title>
+  <style>
+    body { margin:0; background:#fff; font-family:Arial, Helvetica, sans-serif; color:#000; }
+    .slip { max-width:760px; margin:20px auto; border:2px solid #555; }
+    .logo { text-align:center; padding:10px; border-bottom:1px solid #bbb; }
+    .logo img { width:80px; height:80px; object-fit:contain; }
+    .center { text-align:center; font-weight:bold; text-transform:uppercase; padding:10px 12px; border-bottom:1px solid #bbb; }
+    .photo { text-align:right; padding:12px 30px; border-bottom:1px solid #bbb; }
+    .photo img { width:120px; height:150px; object-fit:cover; }
+    .line { display:flex; gap:10px; padding:10px 12px; border-bottom:1px solid #bbb; font-weight:bold; text-transform:uppercase; }
+    .label { flex:0 0 38%; }
+    .value { flex:1; }
+    .grid { display:grid; grid-template-columns:2fr 1fr 1fr; padding:10px 12px; border-bottom:1px solid #bbb; font-weight:bold; text-transform:uppercase; }
+    .mid { text-align:center; }
+    .note { text-align:center; font-size:12px; padding:8px; color:#444; }
+    button { margin:12px; padding:10px 20px; background:#1b7a3e; color:#fff; border:0; border-radius:4px; font-size:16px; cursor:pointer; }
+    @media print { button { display:none; } }
+  </style>
+</head>
+<body>
+  <div class="slip">
+    <div class="logo"><img src="download.jpg" alt="Logo"></div>
+    <div class="center">Joint Universities Preliminary Examinations Board (JUPEB)</div>
+    <div class="center">2026 Examination Results</div>
+
+    <div class="photo"><img src="IMG_5792.PNG" alt="Passport"></div>
+
+    <div class="line"><div class="label">Examination Number:</div><div class="value" id="examNo"></div></div>
+    <div class="line"><div class="label">Surname:</div><div class="value" id="surname"></div></div>
+    <div class="line"><div class="label">Other Name(s):</div><div class="value" id="otherNames"></div></div>
+    <div class="line"><div class="label">Institution:</div><div class="value" id="institution"></div></div>
+
+    <div class="grid"><div>Subject</div><div class="mid">Code</div><div class="mid">Grade</div></div>
+    <div id="gradeRows"></div>
+
+    <div class="note">Result page` </div>
+  </div>
+
+  <div style="text-align:center"><button onclick="window.print()">Print Result</button></div>
+
+  <script>
+    let student = {
+      examNumber: "230010544",
+      surname: "MOORE",
+      otherNames: "EMMANUEL BOLUWATIFE",
+      institution: "UNIVERSITY OF LAGOS",
+      subjects: [
+        { name: "LITERATURE", code: "LIT", grade: "B" },
+        { name: "GOVERNMENT", code: "GOV", grade: "C" },
+        { name: "CHRISTIAN STUDIES", code: "CRS", grade: "B" }
+      ]
+    };
+
+    try {
+      const saved = sessionStorage.getItem("student");
+      if (saved) { student = JSON.parse(saved); }
+    } catch (e) {}
+
+    document.getElementById("examNo").textContent = student.examNumber;
+    document.getElementById("surname").textContent = student.surname;
+    document.getElementById("otherNames").textContent = student.otherNames;
+    document.getElementById("institution").textContent = student.institution;
+
+    const subjects = Array.isArray(student.subjects)
+    ? student.subjects
+    : [];
+
+document.getElementById("gradeRows").innerHTML = subjects.map(function (s) {
+    return '<div class="grid">' +
+        '<div>' + (s.name || "") + '</div>' +
+        '<div class="mid">' + (s.code || "") + '</div>' +
+        '<div class="mid">' + (s.grade || "") + '</div>' +
+    '</div>';
+}).join("");
+  </script>
+</body>
+</html>
